@@ -1,0 +1,6 @@
+LISTE: _titre, position
+APPARTIENT, 11 CARTE, 0N LISTE
+CARTE: _titre, position, couleur
+POSSEDE, 0N LABEL, 0N CARTE
+LABEL: _titre, couleur
+
