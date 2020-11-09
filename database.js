@@ -10,6 +10,7 @@ const sequelize = new Sequelize(
         define: {
        
             underscored: true,
+            timestamps: false
 
         }
     }

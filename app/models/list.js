@@ -6,7 +6,17 @@ class List extends Model {}
 List.init(
     {
         title: DataTypes.STRING,
-        position:DataTypes.INTEGER
+        position:DataTypes.INTEGER,
+        created_at: {
+            type: 'TIMESTAMP',
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+            allowNull: false
+          },
+          updated_at: {
+            type: 'TIMESTAMP',
+            defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+            allowNull: false
+          }
 
     }, 
     {

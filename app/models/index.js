@@ -1,5 +1,20 @@
 const Card = require('./card');
 const Tag = require('./tag');
+const List = require('./list');
+
+
+List.hasMany(Card, {
+    //la clé étrangère qu'on doit retrouver dans List
+    foreignKey: 'list_id',
+    //le nom qu'on souhaite donner aux cartes si on fait un join
+    as: 'cards'
+});
+
+
+Card.belongsTo(List, {
+    foreignKey: 'list_id',
+    as: 'list'
+});
 
 Card.belongsToMany(Tag, {
     //le nom du champ de Card dans la table intermédiaire
@@ -26,5 +41,6 @@ Tag.belongsToMany(Card, {
 
 module.exports = {
 Card,
-Tag
+Tag,
+List
 }
