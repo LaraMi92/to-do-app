@@ -1,4 +1,4 @@
-liste (id SERIAL, titre TEXT, position INT)
-carte (id SERIAL, titre TEXT, position INT, couleur TEXT, #liste(id) INT)
-label (id SERIAL, titre TEXT, couleur TEXT)
+liste (id SERIAL, titre TEXT NOT NULL, position INT)
+carte (id SERIAL, titre TEXT NOT NULL, position INT, couleur TEXT, #liste(id) INT)
+label (id SERIAL, titre TEXT NOT NULL, couleur TEXT)
 label_appartient_carte(#label(id) INT, #carte(id) INT)
