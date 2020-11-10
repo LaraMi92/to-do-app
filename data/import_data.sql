@@ -1,15 +1,15 @@
-INSERT INTO "list" ("id", "title", "position") VALUES
-(1, 'à faire', 0),
-(2, 'en cours', 1),
-(3, 'fait', 2);
-INSERT INTO "card" ("id", "title", "position", "color", "list_id") VALUES
-(1, 'faire les courses', 0, '', 1),
-(2, 'acheter un jeu', 1, '', 2),
-(3, 'cloturer le dossier 32', 2, '', 3);
-INSERT INTO "tag" ("id", "title", "color") VALUES
-(1, 'urgent', '#F08080'),
-(2, 'pro', '#FFFF00'),
-(3, 'perso', '#9370DB');
+INSERT INTO "list" ("title", "position") VALUES
+('à faire', 0),
+('en cours', 1),
+('fait', 2);
+INSERT INTO "card" ("title", "position", "color", "list_id") VALUES
+('faire les courses', 0, DEFAULT, 1),
+('acheter un jeu', 1, DEFAULT, 2),
+('cloturer le dossier 32', 2, DEFAULT, 3);
+INSERT INTO "tag" ("title", "color") VALUES
+('urgent', '#F08080'),
+('pro', '#FFFF00'),
+('perso', '#9370DB');
 INSERT INTO "tag_belongs_card" ("card_id", "tag_id") VALUES
 (1, 3),
 (2, 3),

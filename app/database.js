@@ -1,4 +1,3 @@
-require('dotenv').config();
 
 
 const {Sequelize} = require('sequelize');
@@ -10,7 +9,8 @@ const sequelize = new Sequelize(
         define: {
        
             underscored: true,
-            timestamps: false
+            createdAt: "created_at",
+            updatedAt: "updated_at",
 
         }
     }
