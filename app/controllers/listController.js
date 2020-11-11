@@ -58,6 +58,103 @@ const listController = {
             res.status(500).send(error);
         }
 
+    },
+
+    updateLists: async (req, res) => {
+
+        try {
+
+
+            const updatedLists = await List.update({
+                    title: req.body.title,
+                    position: req.body.position
+                }, {
+                    where: {}
+                });
+            
+            await updatedLists.save();
+            
+            console.log({updatedLists});
+            res.json({updatedLists});
+
+        }
+
+        catch(error){
+
+            res.status(500).send(error);
+
+        }
+
+    },
+
+    updateOneList: async (req, res) => {
+
+        try {
+
+            const listId = req.params.id;
+
+            const updatedList = await List.update({
+                title : req.body.title,
+                position: req.body.position },
+                {
+                    where: {
+                        id: listId
+                    }
+                  
+            });
+
+            res.json({updatedList});
+
+        }
+        catch(error){
+
+            res.status(500).send(error);
+        }
+    },
+
+    deleteLists: async (req, res) => {
+        try{
+
+        const lists = await List.destroy({
+            
+            truncate: { cascade: true }
+        });
+
+        if(!lists){
+
+            res.json("all lists successfully deleted");
+        }
+        }
+        catch(error){
+            res.status(500).send(error);
+        }
+    },
+
+    deleteList: async (req, res) => {
+
+        try{
+        
+        const listId = req.params.id;
+
+        const list = await List.destroy({
+            
+
+            where: {id : listId},
+            include: [{all: true, nested: true}]
+            
+            
+        });
+
+        if(!list){
+            res.json("list successfully deleted");
+        }
+        }
+        catch(error){
+
+        res.status(500).send(error);
+
+        }
+
     }
 
 }
