@@ -39,11 +39,7 @@ const tagController = {
 
         try {
 
-            const newTag = new Tag({
-
-                title: req.body.title,
-                color: req.body.color
-            });
+            const newTag = new Tag(req.body);
 
             await newTag.save();
             res.json(newTag);
@@ -62,10 +58,7 @@ const tagController = {
         try {
         const tagId = req.params.id;
 
-        const updatedTag = await Tag.update({
-            title: req.body.title,
-            color: req.body.color
-        }, {
+        const updatedTag = await Tag.update(req.body, {
             where: { id: tagId }
         });
 
@@ -91,10 +84,7 @@ const tagController = {
 
         try {
         
-        const tags = await Tag.update({
-            title: req.body.title,
-            color: req.body.color
-        }, {
+        const tags = await Tag.update(req.body, {
             where: {},
             returning: true
         });
@@ -119,8 +109,7 @@ const tagController = {
             const tagId = req.params.id;
 
             const tag = await Tag.destroy({
-                where: {id : tagId},
-                include: [{all: true, nested: true}]
+                where: {id : tagId} 
             });
 
             if(tag == 0){

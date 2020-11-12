@@ -35,7 +35,7 @@ const listController = {
             const list = await List.findByPk(listId, foundOptions);
 
             if (list) {
-            res.json(list);
+                res.json(list);
             } else {
                 next();
             }
@@ -54,13 +54,9 @@ const listController = {
 
         try {
 
-            const newList = new List({
-            title: req.body.title,
-            position: req.body.position
-        });
-
-        await newList.save();
-        res.json(newList);
+            const newList = new List(req.body);
+            await newList.save();
+            res.json(newList);
 
         }
         catch(error){
@@ -75,10 +71,7 @@ const listController = {
         try {
 
 
-            const updatedLists = await List.update({
-                    title: req.body.title,
-                    position: req.body.position
-                }, {
+            const updatedLists = await List.update(req.body, {
                     where: {},
                     returning: true
                 });
@@ -104,9 +97,7 @@ const listController = {
 
             const listId = req.params.id;
 
-            const updatedList = await List.update({
-                title : req.body.title,
-                position: req.body.position },
+            const updatedList = await List.update(req.body,
                 {
                     where: {
                         id: listId
@@ -121,7 +112,7 @@ const listController = {
 
             } else {
 
-            res.json(updatedList[1][0]);
+                res.json(updatedList[1][0]);
             }
 
         }
@@ -145,6 +136,7 @@ const listController = {
         }
         }
         catch(error){
+
             res.status(500).send({"error": error.message});
         }
     },
@@ -157,10 +149,7 @@ const listController = {
 
         const list = await List.destroy({
             
-
-            where: {id : listId},
-            include: [{all: true, nested: true}]
-            
+            where: {id : listId}
             
         });
 
@@ -169,14 +158,14 @@ const listController = {
             next();
             
         } else {
-            
+
             res.json("list successfully deleted");
             
         }
         }
         catch(error){
 
-        res.status(500).send({"error": error.message});
+            res.status(500).send({"error": error.message});
 
         }
 

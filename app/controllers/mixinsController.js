@@ -3,7 +3,7 @@ const { Card, Tag } = require('../models');
 const mixinsController = {
 
     associate : async (req, res, next) => {
-        
+
         try {
         //gather both ids
         const cardid = req.params.cardid;
@@ -12,20 +12,26 @@ const mixinsController = {
         const card = await Card.findByPk(cardid);
         const tag = await Tag.findByPk(tagid);
         //apply add method
-        const association = await card.addTag(tag);
 
-        if(association){
+        if(card && tag){
 
-            res.json("tag was added to card");
+                const association = await card.addTag(tag);
 
-        } else {
+            if(association){
+
+                res.json("tag was added to card");
+    
+            }
+        }
+
+        else {
 
             next();
         }
         
         } catch(error){
 
-        res.json({"error": error.message})
+            res.json({"error": error.message})
         }
 
     },
@@ -40,16 +46,19 @@ const mixinsController = {
         //find instances through id
         const card = await Card.findByPk(cardid);
         const tag = await Tag.findByPk(tagid);
+
+        if(card && tag){
         //remove association
         const dissociate = await card.removeTag(tag);
 
-        if (!dissociate){
-        res.json("tag was removed from card");
+            if (!dissociate){
 
-        } else {
+                res.json("tag was removed from card");
 
-            next();
-        }
+            }} else {
+
+                next();
+            }
         }
 
         catch(error){

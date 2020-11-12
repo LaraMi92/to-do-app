@@ -36,11 +36,11 @@ const cardController = {
 
             if(card){
 
-            res.json(card);
+                res.json(card);
 
             } else {
             
-            next();
+                next();
             }
 
         }
@@ -56,12 +56,7 @@ const cardController = {
         
         try { 
         
-            const newCard = new Card({
-                title: req.body.title,
-                position: req.body.position,
-                color: req.body.color
-            });
-
+            const newCard = new Card(req.body);
             await newCard.save();
             res.json(newCard);
 
@@ -79,11 +74,8 @@ const cardController = {
            
         const cardId = req.params.id;
 
-        const updatedCard = await Card.update({
-            title: req.body.title,
-            position: req.body.position,
-            color: req.body.color
-        }, {
+        const updatedCard = await Card.update(req.body, {
+            
             where: { id: cardId}
         });
 
@@ -108,11 +100,7 @@ const cardController = {
 
         try {
 
-        const cards = await Card.update({
-            title: req.body.title,
-            position: req.body.position,
-            color: req.body.color
-        }, {
+        const cards = await Card.update(req.body, {
             where: {},
             returning: true
         });
@@ -135,8 +123,8 @@ const cardController = {
     const cardId = req.params.id;
     
     const card = await Card.destroy({
-        where: {id: cardId},
-        include: [{all: true, nested: true}]
+        where: {id: cardId}
+        
     });
 
     if(card === 0){
