@@ -5,7 +5,14 @@ class List extends Model {}
 
 List.init(
     {
-        title: DataTypes.STRING,
+        title:{
+            //cannot be empty nor null 
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: true
+            }
+            },
         position:DataTypes.INTEGER
 
     }, 

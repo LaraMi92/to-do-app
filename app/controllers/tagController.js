@@ -1,13 +1,13 @@
-const { List, Tag, Card } = require('../models');
+const { Tag } = require('../models');
 
 const tagController = {
 
-    showTags: async (req, res) => {
+    showTags: async (req, res, next) => {
 
         try {
 
             const tags = await Tag.findAll();
-            res.json({tags});
+            res.json(tags);
         }
         catch (error){
 
@@ -17,7 +17,7 @@ const tagController = {
     
     },
 
-    getOneTag: async (req, res) => {
+    getOneTag: async (req, res, next) => {
 
         try {
 
@@ -25,7 +25,7 @@ const tagController = {
 
             const tag = await Tag.findByPk(tagId);
 
-            res.json({tag});
+            res.json(tag);
 
         }
 
@@ -35,7 +35,7 @@ const tagController = {
         }
     },
 
-    createTag: async (req, res) => {
+    createTag: async (req, res, next) => {
 
         try {
 
@@ -46,7 +46,7 @@ const tagController = {
             });
 
             await newTag.save();
-            res.json({newTag});
+            res.json(newTag);
 
         }
         catch(error){
@@ -57,7 +57,7 @@ const tagController = {
 
     },
 
-    updateOneTag: async (req, res) => {
+    updateOneTag: async (req, res, next) => {
 
         try {
         const tagId = req.params.id;
@@ -66,11 +66,19 @@ const tagController = {
             title: req.body.title,
             color: req.body.color
         }, {
-            where: { id: tagId}
+            where: { id: tagId }
         });
 
-        res.json({updatedTag});
+        await updatedTag.save();
 
+        if(updatedTag[0] == 0){
+
+            next();
+            
+        } else {
+
+            res.json(updatedTag[1][0]);
+        }
 
         }
         catch(error) {
@@ -79,7 +87,7 @@ const tagController = {
         }
     },
 
-    updateTags: async (req, res) => {
+    updateTags: async (req, res, next) => {
 
         try {
         
@@ -87,12 +95,13 @@ const tagController = {
             title: req.body.title,
             color: req.body.color
         }, {
-            where: {}
+            where: {},
+            returning: true
         });
 
         await tags.save();
 
-        res.json({tags});
+        res.json(tags[1]);
 
 
         }
@@ -103,7 +112,7 @@ const tagController = {
 
     },
 
-    deleteTag: async (req, res) => {
+    deleteTag: async (req, res, next) => {
 
         try{
 
@@ -114,7 +123,11 @@ const tagController = {
                 include: [{all: true, nested: true}]
             });
 
-            if(!tag){
+            if(tag == 0){
+
+                next();
+                
+            } else {
 
                 res.json("tag successfully deleted");
             }
@@ -126,7 +139,7 @@ const tagController = {
         }
     },
 
-    deleteTags: async (req, res) => {
+    deleteTags: async (req, res, next) => {
 
         try{
             const tags = await Tag.destroy({

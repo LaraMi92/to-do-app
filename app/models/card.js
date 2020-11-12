@@ -5,7 +5,14 @@ class Card extends Model {}
 
 Card.init(
     {
-        title: DataTypes.STRING,
+        title:{
+            //cannot be empty nor null 
+            type: DataTypes.STRING,
+            allowNull: false,
+            validate: {
+                notEmpty: true
+            }
+            },
         position:DataTypes.INTEGER,
         color:DataTypes.STRING
 

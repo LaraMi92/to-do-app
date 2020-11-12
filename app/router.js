@@ -3,6 +3,7 @@ const express = require('express');
 const listController = require('./controllers/listController');
 const cardController = require('./controllers/cardController');
 const tagController = require('./controllers/tagController');
+const mixinsController = require('./controllers/mixinsController');
 
 const router = express.Router();
 
@@ -42,5 +43,14 @@ router.delete('/tag/:id', tagController.deleteTag);
 router.delete('/list', listController.deleteLists);
 router.delete('/card', cardController.deleteCards);
 router.delete('/tag', tagController.deleteTags);
+
+//routes to associate/dissociate card from tag
+router.patch('/card/:cardid/tag/:tagid', mixinsController.associate);
+router.delete('/card/:cardid/tag/:tagid', mixinsController.dissociate);
+
+
+router.use((req, res)=> {
+    res.status(404).json({error: "not found"});
+})
 
 module.exports = router;

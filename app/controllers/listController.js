@@ -1,46 +1,56 @@
-const { List, Tag, Card } = require('../models');
+
+const { List } = require('../models');
+
+const foundOptions = {
+    
+        include: {all: true, nested: true},
+        order: [['position', 'ASC'],
+        ['cards', 'position', 'ASC']]
+    
+};
 
 const listController = {
 
-    showLists: async (req, res) => {
+    showLists: async (req, res, next) => {
 
         try{
 
-            const lists = await List.findAll();
-            res.json({lists})
+            const lists = await List.findAll(foundOptions);
+
+            res.json(lists);
         }
         catch(error){
 
-            res.status(500).send(error);
+            res.status(500).json({"error": error.message});
         }
        
 
     },
 
-    getOneList: async (req, res) => {
+    getOneList: async (req, res, next) => {
 
         try {
             const listId = parseInt(req.params.id);
 
-            const list = await List.findByPk(listId, {
-                include:{association: 'cards', include: [
-                    {association: 'tags'}
-                ]}
-            });
+            const list = await List.findByPk(listId, foundOptions);
 
-            res.json({list});
+            if (list) {
+            res.json(list);
+            } else {
+                next();
+            }
 
         }
         catch(error){
 
-            res.status(404).send(error);
+            res.status(500).send({"error": error.message});
 
         }
 
 
     },
 
-    createList: async (req, res) => {
+    createList: async (req, res, next) => {
 
         try {
 
@@ -50,12 +60,12 @@ const listController = {
         });
 
         await newList.save();
-        res.json({newList});
+        res.json(newList);
 
         }
         catch(error){
 
-            res.status(500).send(error);
+            res.status(500).send({"error": error.message});
         }
 
     },
@@ -69,25 +79,26 @@ const listController = {
                     title: req.body.title,
                     position: req.body.position
                 }, {
-                    where: {}
+                    where: {},
+                    returning: true
                 });
             
             await updatedLists.save();
             
-            console.log({updatedLists});
-            res.json({updatedLists});
+            console.log(updatedLists);
+            res.json(updatedLists[1]);
 
         }
 
         catch(error){
 
-            res.status(500).send(error);
+            res.status(500).send({"error": error.message});
 
         }
 
     },
 
-    updateOneList: async (req, res) => {
+    updateOneList: async (req, res, next) => {
 
         try {
 
@@ -99,16 +110,24 @@ const listController = {
                 {
                     where: {
                         id: listId
-                    }
+                    },
+                    returning: true
                   
             });
 
-            res.json({updatedList});
+            if(updatedList[0]== 0){
+                
+                next();
+
+            } else {
+
+            res.json(updatedList[1][0]);
+            }
 
         }
         catch(error){
 
-            res.status(500).send(error);
+            res.status(500).send({"error": error.message});
         }
     },
 
@@ -126,11 +145,11 @@ const listController = {
         }
         }
         catch(error){
-            res.status(500).send(error);
+            res.status(500).send({"error": error.message});
         }
     },
 
-    deleteList: async (req, res) => {
+    deleteList: async (req, res, next) => {
 
         try{
         
@@ -145,13 +164,19 @@ const listController = {
             
         });
 
-        if(!list){
+        if(list === 0){
+
+            next();
+            
+        } else {
+            
             res.json("list successfully deleted");
+            
         }
         }
         catch(error){
 
-        res.status(500).send(error);
+        res.status(500).send({"error": error.message});
 
         }
 

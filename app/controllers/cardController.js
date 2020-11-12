@@ -1,13 +1,23 @@
-const { List, Tag, Card } = require('../models');
+const { Card } = require('../models');
+
+const foundOptions = {
+
+    include: {all: true, nested: true},
+    order: [
+        ['position', 'ASC'],
+        ['cards', 'position', 'ASC']
+    ]
+};
+
 
 const cardController = {
 
-    showCards: async (req, res) => {
+    showCards: async (req, res, next) => {
 
         try{
 
-            const cards = await Card.findAll();
-            res.json({cards});
+            const cards = await Card.findAll(foundOptions);
+            res.json(cards);
         }
         catch(error){
 
@@ -17,16 +27,21 @@ const cardController = {
     
     },
 
-    getOneCard: async (req, res) => {
+    getOneCard: async (req, res, next) => {
 
         try {
             const cardId = parseInt(req.params.id);
 
-            const card = await Card.findByPk(cardId, {
-                include: {association: 'tags'}
-            });
+            const card = await Card.findByPk(cardId, foundOptions);
 
-            res.json({card});
+            if(card){
+
+            res.json(card);
+
+            } else {
+            
+            next();
+            }
 
         }
 
@@ -37,7 +52,7 @@ const cardController = {
 
     },
 
-    createCard: async (req, res) => {
+    createCard: async (req, res, next) => {
         
         try { 
         
@@ -48,7 +63,7 @@ const cardController = {
             });
 
             await newCard.save();
-            res.json({newCard});
+            res.json(newCard);
 
         }
         catch(error){
@@ -58,7 +73,7 @@ const cardController = {
 
     },
 
-    updateOneCard: async (req, res) => {
+    updateOneCard: async (req, res, next) => {
 
         try {
            
@@ -72,8 +87,14 @@ const cardController = {
             where: { id: cardId}
         });
 
-        res.json({updatedCard});    
+        if(updatedCard[0] === 0){
 
+            next();
+        } else {
+
+        res.json(updatedCard[1][0]);    
+        
+        }
 
         }
 
@@ -83,7 +104,7 @@ const cardController = {
         }
     },
 
-    updateCards: async (req, res) => {
+    updateCards: async (req, res, next) => {
 
         try {
 
@@ -92,12 +113,13 @@ const cardController = {
             position: req.body.position,
             color: req.body.color
         }, {
-            where: {}
+            where: {},
+            returning: true
         });
 
         await cards.save();
 
-        res.json({cards});
+        res.json(cards[1]);
 
 
         }
@@ -108,8 +130,8 @@ const cardController = {
         }
     },
 
-    deleteCard: async (req, res) => {
-    try{
+    deleteCard: async (req, res, next) => {
+    try {
     const cardId = req.params.id;
     
     const card = await Card.destroy({
@@ -117,7 +139,10 @@ const cardController = {
         include: [{all: true, nested: true}]
     });
 
-    if(!card){
+    if(card === 0){
+
+        next();
+    } else {
 
         res.json("card successfully deleted");
     }}
@@ -127,7 +152,7 @@ const cardController = {
     }
     },
 
-    deleteCards: async (req, res) => {
+    deleteCards: async (req, res, next) => {
         try {
             const cards = await Card.destroy({
                 truncate: { cascade: true }
