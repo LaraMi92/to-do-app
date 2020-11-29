@@ -5,29 +5,28 @@ const mixinsController = {
     associate : async (req, res, next) => {
 
         try {
-        //gather both ids
-        const cardid = req.params.cardid;
-        const tagid = req.params.tagid;
-        //find instances through id
-        const card = await Card.findByPk(cardid);
-        const tag = await Tag.findByPk(tagid);
-        //apply add method
+        
+            const cardid = req.params.cardid;
+            const tagid = req.params.tagid;
+     
+            const card = await Card.findByPk(cardid);
+            const tag = await Tag.findByPk(tagid);
+        
+            //apply add method
 
-        if(card && tag){
+            if(card && tag){
 
                 const association = await card.addTag(tag);
 
-            if(association){
-
-                res.json("tag was added to card");
+                    if(association){
+                    
+                    res.json("tag was added to card");
     
+                    }
+            } else {
+
+                next();
             }
-        }
-
-        else {
-
-            next();
-        }
         
         } catch(error){
 
@@ -40,25 +39,24 @@ const mixinsController = {
 
         try {
 
-        //gather both ids
-        const cardid = req.params.cardid;
-        const tagid = req.params.tagid;
-        //find instances through id
-        const card = await Card.findByPk(cardid);
-        const tag = await Tag.findByPk(tagid);
+            const cardid = req.params.cardid;
+            const tagid = req.params.tagid;
+        
+            const card = await Card.findByPk(cardid);
+            const tag = await Tag.findByPk(tagid);
 
-        if(card && tag){
-        //remove association
-        const dissociate = await card.removeTag(tag);
+            if(card && tag){
+        
+                const dissociate = await card.removeTag(tag);
 
-            if (!dissociate){
+                    if (!dissociate){
 
-                res.json("tag was removed from card");
+                        res.json("tag was removed from card");
 
-            }} else {
+                    }} else {
 
-                next();
-            }
+                        next();
+                    }
         }
 
         catch(error){

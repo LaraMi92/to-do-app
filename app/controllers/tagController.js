@@ -56,22 +56,22 @@ const tagController = {
     updateOneTag: async (req, res, next) => {
 
         try {
-        const tagId = req.params.id;
+                const tagId = req.params.id;
 
-        const updatedTag = await Tag.update(req.body, {
-            where: { id: tagId }
-        });
+                const updatedTag = await Tag.update(req.body, {
+                where: { id: tagId },
+                returning:true
+                });
 
-        await updatedTag.save();
 
-        if(updatedTag[0] == 0){
+                    if(updatedTag[0] == 0){
 
-            next();
+                        next();
             
-        } else {
+                    } else {
 
-            res.json(updatedTag[1][0]);
-        }
+                        res.json(updatedTag[1][0]);
+                    }
 
         }
         catch(error) {
@@ -84,14 +84,14 @@ const tagController = {
 
         try {
         
-        const tags = await Tag.update(req.body, {
+            const tags = await Tag.update(req.body, {
             where: {},
             returning: true
-        });
+            });
 
-        await tags.save();
+            await tags.save();
 
-        res.json(tags[1]);
+            res.json(tags[1]);
 
 
         }
@@ -131,16 +131,18 @@ const tagController = {
     deleteTags: async (req, res, next) => {
 
         try{
-            const tags = await Tag.destroy({
+                const tags = await Tag.destroy({
                 truncate:{ cascade: true }
-            });
+                });
 
-            if(!tags){
-                res.json("all tags successfully deleted");
-            }
+                    if(!tags){
+                
+                        res.json("all tags successfully deleted");
+                    }
 
         }
         catch(error){
+
             res.status(500).send(error);
         }
     }

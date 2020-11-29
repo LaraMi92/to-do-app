@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS "card" (
 "title" text NOT NULL,
 "position" integer DEFAULT 0,
 "color" text DEFAULT '#fff',
-"list_id" integer REFERENCES "list" ("id"),
+"list_id" integer REFERENCES "list" ("id") ON DELETE CASCADE,
 "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -13,8 +13,20 @@ Card.init(
                 notEmpty: true
             }
             },
-        position:DataTypes.INTEGER,
-        color:DataTypes.STRING
+        position:{
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+            allowNull: false
+        },
+        color: {
+            type: DataTypes.STRING,
+            defaultValue: '#fff'
+        },
+        //adding foreign key here to make sure card is linked to a list when created
+        list_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        }
 
     }, 
     {

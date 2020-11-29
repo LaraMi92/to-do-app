@@ -19,6 +19,7 @@ const listController = {
 
             res.json(lists);
         }
+        
         catch(error){
 
             res.status(500).json({"error": error.message});
@@ -30,17 +31,22 @@ const listController = {
     getOneList: async (req, res, next) => {
 
         try {
+                
             const listId = parseInt(req.params.id);
 
             const list = await List.findByPk(listId, foundOptions);
 
             if (list) {
+                
                 res.json(list);
+
             } else {
+                
                 next();
             }
 
         }
+        
         catch(error){
 
             res.status(500).send({"error": error.message});
@@ -97,12 +103,9 @@ const listController = {
 
             const listId = req.params.id;
 
-            const updatedList = await List.update(req.body,
-                {
-                    where: {
-                        id: listId
-                    },
-                    returning: true
+            const updatedList = await List.update(req.body,{
+                where: {id: listId},
+                returning: true
                   
             });
 
@@ -123,6 +126,7 @@ const listController = {
     },
 
     deleteLists: async (req, res) => {
+        
         try{
 
         const lists = await List.destroy({
