@@ -1,0 +1,18 @@
+body {
+  background: linear-gradient(#ADD8E6, #B0C4DE);
+  font-family: 'Roboto', sans-serif;
+  height: 100vh;
+}
+
+.card-lists {
+  overflow-x: auto;
+}
+
+.panel-heading {
+  background-color: rgb(129, 162, 192);
+}
+
+.panel-heading:hover{
+  cursor: move
+}
+
